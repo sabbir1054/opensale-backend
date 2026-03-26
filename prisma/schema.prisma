@@ -17,6 +17,7 @@ enum ROLE {
   WORKER
   INVESTOR
   AGENT
+  ADMIN
 }
 
 enum ProductCondition {
@@ -27,6 +28,7 @@ enum ProductCondition {
 
 model User {
   id        String   @id @default(uuid())
+  role      ROLE     @default(USER)
   fullName  String
   phone     String   @unique
   email     String
