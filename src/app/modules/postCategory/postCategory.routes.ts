@@ -1,6 +1,6 @@
 import express from 'express';
+import { uploadSingle } from '../../../config/multer';
 import { ENUM_USER_ROLE } from '../../../enums/user';
-import { FileUploadHelper } from '../../../helpers/fileUpload';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { PostCategoryController } from './postCategory.controller';
@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/',
   auth(ENUM_USER_ROLE.ADMIN),
-  FileUploadHelper.uploadProfile.single('image'),
+  uploadSingle,
   validateRequest(PostCategoryValidation.createPostCategoryValidation),
   PostCategoryController.createPostCategory,
 );
@@ -23,7 +23,7 @@ router.get('/:id', PostCategoryController.getSinglePostCategory);
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
-  FileUploadHelper.uploadProfile.single('image'),
+  uploadSingle,
   validateRequest(PostCategoryValidation.updatePostCategoryValidation),
   PostCategoryController.updatePostCategory,
 );

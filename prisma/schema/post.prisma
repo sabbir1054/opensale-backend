@@ -8,6 +8,9 @@ model PostAddress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  postId String @unique
+  post   Post   @relation(fields: [postId], references: [id])
+
   @@map("postAddress")
 }
 
@@ -33,10 +36,11 @@ model Post {
   phone            String
   category         PostCategory     @relation(fields: [postCategoryId], references: [id])
 
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   postCategoryId String
   photos         PostPhoto[]
+  address        PostAddress?
 
   @@map("post")
 }
