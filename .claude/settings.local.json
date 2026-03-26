@@ -4,7 +4,10 @@
       "Bash(npx prisma:*)",
       "Bash(npx tsc:*)",
       "Bash(npm ls:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(yarn add:*)",
+      "Bash(node --trace-deprecation -e \"require\\(''''./src/shared/prisma''''\\)\")",
+      "Bash(npm view:*)"
     ]
   }
 }

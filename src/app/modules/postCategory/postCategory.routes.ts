@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/',
   auth(ENUM_USER_ROLE.ADMIN),
-  uploadSingle,
+  uploadSingle as any,
   validateRequest(PostCategoryValidation.createPostCategoryValidation),
   PostCategoryController.createPostCategory,
 );
@@ -23,7 +23,7 @@ router.get('/:id', PostCategoryController.getSinglePostCategory);
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
-  uploadSingle,
+  uploadSingle as any,
   validateRequest(PostCategoryValidation.updatePostCategoryValidation),
   PostCategoryController.updatePostCategory,
 );

@@ -37,7 +37,7 @@ const getAllPosts = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSinglePost = catchAsync(async (req: Request, res: Response) => {
-  const result = await PostServices.getSinglePost(req.params.id);
+  const result = await PostServices.getSinglePost(req.params.id as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -52,7 +52,7 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
   const imageUrls = files ? files.map(file => file.path) : undefined;
 
   const result = await PostServices.updatePost(
-    req.params.id,
+    req.params.id as string,
     req.body,
     imageUrls,
   );
@@ -66,7 +66,7 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deletePost = catchAsync(async (req: Request, res: Response) => {
-  const result = await PostServices.deletePost(req.params.id);
+  const result = await PostServices.deletePost(req.params.id as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -77,7 +77,9 @@ const deletePost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deletePostPhoto = catchAsync(async (req: Request, res: Response) => {
-  const result = await PostServices.deletePostPhoto(req.params.photoId);
+  const result = await PostServices.deletePostPhoto(
+    req.params.photoId as string,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

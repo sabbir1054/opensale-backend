@@ -43,7 +43,7 @@ const getAllPostCategories = catchAsync(async (req: Request, res: Response) => {
 const getSinglePostCategory = catchAsync(
   async (req: Request, res: Response) => {
     const result = await PostCategoryServices.getSinglePostCategory(
-      req.params.id,
+      req.params.id as string,
     );
 
     sendResponse(res, {
@@ -57,10 +57,13 @@ const getSinglePostCategory = catchAsync(
 
 const updatePostCategory = catchAsync(async (req: Request, res: Response) => {
   const imageUrl = req.file ? req.file.path : undefined;
-  const result = await PostCategoryServices.updatePostCategory(req.params.id, {
-    ...req.body,
-    imageUrl,
-  });
+  const result = await PostCategoryServices.updatePostCategory(
+    req.params.id as string,
+    {
+      ...req.body,
+      imageUrl,
+    },
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,7 +74,9 @@ const updatePostCategory = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deletePostCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await PostCategoryServices.deletePostCategory(req.params.id);
+  const result = await PostCategoryServices.deletePostCategory(
+    req.params.id as string,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

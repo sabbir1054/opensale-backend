@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  uploadMultiple,
+  uploadMultiple as any,
   validateRequest(PostValidation.createPostValidation),
   PostController.createPost,
 );
@@ -23,7 +23,7 @@ router.get('/:id', PostController.getSinglePost);
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  uploadMultiple,
+  uploadMultiple as any,
   validateRequest(PostValidation.updatePostValidation),
   PostController.updatePost,
 );

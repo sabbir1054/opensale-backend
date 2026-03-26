@@ -33,7 +33,7 @@ const getMyWishlist = catchAsync(async (req: Request, res: Response) => {
 
 const removeFromWishlist = catchAsync(async (req: Request, res: Response) => {
   const { id: userId } = req.user as { id: string };
-  const { postId } = req.params;
+  const postId = req.params.postId as string;
 
   const result = await WishlistServices.removeFromWishlist(userId, postId);
 

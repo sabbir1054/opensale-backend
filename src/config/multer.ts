@@ -1,22 +1,17 @@
-/* eslint-disable no-undef */
-import { Request } from 'express';
-import multer, { FileFilterCallback } from 'multer';
+ 
+import multer from 'multer';
 
 const storage = multer.diskStorage({
-  destination: function (_req: Request, _file: Express.Multer.File, cb) {
+  destination: function (_req, _file, cb) {
     cb(null, 'uploads/');
   },
-  filename: (_req: Request, file: Express.Multer.File, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '--' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + '-' + file.originalname);
   },
 });
 
-const fileFilter = (
-  _req: Request,
-  file: Express.Multer.File,
-  cb: FileFilterCallback,
-) => {
+const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
