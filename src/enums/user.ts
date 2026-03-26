@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 export enum ENUM_USER_ROLE {
-  OWNER = 'OWNER',
-  TENANT = 'TENANT',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  WORKER = 'WORKER',
+  AGENT = 'AGENT',
+  INVESTOR = 'INVESTOR',
 }
