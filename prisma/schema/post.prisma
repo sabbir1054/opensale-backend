@@ -41,6 +41,7 @@ model Post {
   postCategoryId String
   photos         PostPhoto[]
   address        PostAddress?
+  wishlists      Wishlist[]
 
   @@map("post")
 }

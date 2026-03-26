@@ -2,6 +2,7 @@ import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { PostRoutes } from '../modules/post/post.routes';
 import { PostCategoryRoutes } from '../modules/postCategory/postCategory.routes';
+import { WishlistRoutes } from '../modules/wishlist/wishlist.routes';
 
 const router = express.Router();
 
@@ -17,6 +18,10 @@ const moduleRoutes = [
   {
     path: '/posts',
     route: PostRoutes,
+  },
+  {
+    path: '/wishlists',
+    route: WishlistRoutes,
   },
 ];
 

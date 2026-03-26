@@ -11,6 +11,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   passwordResets PasswordReset[]
+  wishlists      Wishlist[]
 
   @@map("user")
 }
@@ -26,4 +27,18 @@ model PasswordReset {
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("passwordReset")
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+  @@map("wishlist")
 }
