@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ROLE } from '../users/users.constant';
 const userRegistrationValidation = z.object({
   body: z.object({
-    fullname: z.string({ required_error: 'Name is required' }),
+    fullName: z.string({ required_error: 'Name is required' }),
     phone: z.string({ required_error: 'Phone number is required' }),
     email: z.string().optional(),
     password: z.string({ required_error: 'Password is required' }),
@@ -27,8 +27,23 @@ const changePasswordValidation = z.object({
   }),
 });
 
+const forgotPasswordValidation = z.object({
+  body: z.object({
+    email: z.string({ required_error: 'Email is required' }).email(),
+  }),
+});
+const resetPasswordValidation = z.object({
+  body: z.object({
+    email: z.string({ required_error: 'Email is required' }).email(),
+    otp: z.string({ required_error: 'OTP is required' }),
+    newPassword: z.string({ required_error: 'New password is required' }),
+  }),
+});
+
 export const AuthValidation = {
   changePasswordValidation,
   userRegistrationValidation,
   userLoginValidation,
+  forgotPasswordValidation,
+  resetPasswordValidation,
 };

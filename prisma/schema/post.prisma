@@ -1,0 +1,42 @@
+// Post model
+
+model PostAddress {
+  id        String   @id @default(uuid())
+  division  String
+  district  String
+  area      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("postAddress")
+}
+
+model PostPhoto {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+
+  @@map("photo")
+}
+
+model Post {
+  id               String           @id @default(uuid())
+  title            String
+  description      String           @default("")
+  price            Float            @default(0)
+  isNegotiable     Boolean          @default(true)
+  productCondition ProductCondition @default(LIKE_NEW)
+  name             String
+  phone            String
+  category         PostCategory     @relation(fields: [postCategoryId], references: [id])
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  postCategoryId String
+  photos         PostPhoto[]
+
+  @@map("post")
+}

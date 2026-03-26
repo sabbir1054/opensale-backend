@@ -50,4 +50,16 @@ router.patch(
   AuthController.changeUserPassword,
 );
 
+router.post(
+  '/forgot-password',
+  validateRequest(AuthValidation.forgotPasswordValidation),
+  AuthController.forgotPassword,
+);
+
+router.post(
+  '/forgot-password/verify',
+  validateRequest(AuthValidation.resetPasswordValidation),
+  AuthController.resetPassword,
+);
+
 export const AuthRoutes = router;

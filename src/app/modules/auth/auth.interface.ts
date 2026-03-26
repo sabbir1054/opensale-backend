@@ -1,8 +1,8 @@
 export type IUser = {
   role: 'USER' | 'WORKER' | 'INVESTOR' | 'AGENT' | 'ADMIN';
-  fullname: string;
+  fullName: string;
   phone: string;
-  email?: string;
+  email: string;
   password: string;
 };
 export type IUserLogin = {
@@ -15,5 +15,13 @@ export type IRefreshTokenResponse = {
 };
 export type IPasswordChange = {
   oldPassword: string;
+  newPassword: string;
+};
+export type IForgotPassword = {
+  email: string;
+};
+export type IResetPassword = {
+  email: string;
+  otp: string;
   newPassword: string;
 };

@@ -16,6 +16,7 @@ export default [
       },
       globals: {
         process: 'readonly',
+        console: 'readonly',
       },
     },
     plugins: {
@@ -33,6 +34,6 @@ export default [
   },
   eslintPluginPrettier,
   {
-    ignores: ['dist', 'node_modules', '.env'],
+    ignores: ['dist', 'node_modules', '.env', 'src/generated', '.claude'],
   },
 ];

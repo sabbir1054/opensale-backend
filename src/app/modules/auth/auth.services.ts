@@ -11,10 +11,14 @@ import {
   isPasswordMatched,
 } from '../../../helpers/encryption';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import { generateOTP } from '../../../helpers/otpHelpers';
+import { sendEmail } from '../../../helpers/sendEmail';
 import prisma from '../../../shared/prisma';
 import {
+  IForgotPassword,
   IPasswordChange,
   IRefreshTokenResponse,
+  IResetPassword,
   IUser,
   IUserLogin,
 } from './auth.interface';
@@ -28,7 +32,7 @@ const userRegistration = async (payload: IUser, role: string) => {
 
   const isUserExist = await prisma.user.findFirst({
     where: {
-      OR: [{ username: payload.phone }],
+      OR: [{ phone: payload.phone }],
     },
   });
   if (isUserExist) {
@@ -65,7 +69,7 @@ const userRegistration = async (payload: IUser, role: string) => {
     select: {
       id: true,
       role: true,
-      fullname: true,
+      fullName: true,
       phone: true,
       email: true,
       createdAt: true,
@@ -169,7 +173,7 @@ const changeUserPassword = async (userId: string, payload: IPasswordChange) => {
     select: {
       id: true,
       role: true,
-      fullname: true,
+      fullName: true,
       phone: true,
       email: true,
       createdAt: true,
@@ -179,9 +183,98 @@ const changeUserPassword = async (userId: string, payload: IPasswordChange) => {
   return updatedUser;
 };
 
+const forgotPassword = async (payload: IForgotPassword) => {
+  const { email } = payload;
+
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No user found with this email');
+  }
+
+  // invalidate any existing unused OTPs for this user
+  await prisma.passwordReset.updateMany({
+    where: { userId: user.id, used: false },
+    data: { used: true },
+  });
+
+  // generate OTP and save to DB
+  const otp = generateOTP();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  await prisma.passwordReset.create({
+    data: {
+      otp,
+      expiresAt,
+      userId: user.id,
+    },
+  });
+
+  // send OTP via email
+  await sendEmail({
+    to: email,
+    subject: 'OpenSale - Password Reset OTP',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2>Password Reset</h2>
+        <p>Hi ${user.fullName},</p>
+        <p>Your OTP for password reset is:</p>
+        <h1 style="letter-spacing: 8px; text-align: center; background: #f4f4f4; padding: 16px; border-radius: 8px;">${otp}</h1>
+        <p>This OTP is valid for <strong>10 minutes</strong>.</p>
+        <p>If you did not request this, please ignore this email.</p>
+      </div>
+    `,
+  });
+
+  return { message: 'OTP sent to your email' };
+};
+
+const resetPassword = async (payload: IResetPassword) => {
+  const { email, otp, newPassword } = payload;
+
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No user found with this email');
+  }
+
+  // find valid OTP
+  const passwordReset = await prisma.passwordReset.findFirst({
+    where: {
+      userId: user.id,
+      otp,
+      used: false,
+      expiresAt: { gt: new Date() },
+    },
+  });
+
+  if (!passwordReset) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid or expired OTP');
+  }
+
+  // mark OTP as used
+  await prisma.passwordReset.update({
+    where: { id: passwordReset.id },
+    data: { used: true },
+  });
+
+  // update password
+  const encryptedPassword = await encryptPassword(newPassword);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: encryptedPassword },
+  });
+
+  return { message: 'Password reset successfully' };
+};
+
 export const AuthServices = {
   userRegistration,
   userLogin,
   refreshToken,
   changeUserPassword,
+  forgotPassword,
+  resetPassword,
 };

@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import ApiError from '../../errors/ApiError';
 import handleValidationError from '../../errors/handleValidationError';
 
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 import { ZodError } from 'zod';
 import config from '../../config';
 import handleClientError from '../../errors/handleClientError';
@@ -16,7 +16,7 @@ const globalErrorHandler: ErrorRequestHandler = (
   error,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   config.env === 'development'
     ? console.log(`🐱‍🏍 globalErrorHandler ~~`, { error })

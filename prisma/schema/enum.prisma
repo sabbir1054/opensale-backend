@@ -1,0 +1,15 @@
+// All application enums
+
+enum ROLE {
+  USER
+  WORKER
+  INVESTOR
+  AGENT
+  ADMIN
+}
+
+enum ProductCondition {
+  NEW
+  USED
+  LIKE_NEW
+}
